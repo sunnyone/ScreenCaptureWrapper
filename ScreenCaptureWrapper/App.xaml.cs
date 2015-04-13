@@ -15,7 +15,7 @@ namespace ScreenCaptureWrapper
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            WPF.Themes.ThemeManager.ApplyTheme(this, "WhistlerBlue");
+            WPF.Themes.ThemeManager.ApplyTheme(this, "BureauBlue");
         }
     }
 }
