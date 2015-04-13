@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ScreenCaptureWrapper
 {
@@ -12,37 +13,50 @@ namespace ScreenCaptureWrapper
         public string VideoPath
         {
             get { return videoPath; }
-            set { videoPath = value; NotifyOfPropertyChange(() => VideoPath); }
+            set { videoPath = value; NotifyOfPropertyChange(() => VideoPath); NotifyOfPropertyChange(() => CanRecord); }
         }
 
         private int videoX;
         public int VideoX
         {
             get { return videoX; }
-            set { videoX = value; NotifyOfPropertyChange(() => VideoX); }
+            set { videoX = value; NotifyOfPropertyChange(() => VideoX); NotifyOfPropertyChange(() => CanRecord); }
         }
 
         private int videoY;
         public int VideoY
         {
             get { return videoY; }
-            set { videoY = value; NotifyOfPropertyChange(() => VideoY);  }
+            set { videoY = value; NotifyOfPropertyChange(() => VideoY); NotifyOfPropertyChange(() => CanRecord); }
         }
 
         private int videoWidth;
         public int VideoWidth
         {
             get { return videoWidth; }
-            set { videoWidth = value; NotifyOfPropertyChange(() => VideoWidth); }
+            set { videoWidth = value; NotifyOfPropertyChange(() => VideoWidth); NotifyOfPropertyChange(() => CanRecord); }
         }
 
         private int videoHeight;
         public int VideoHeight
         {
             get { return videoHeight; }
-            set { videoHeight = value; NotifyOfPropertyChange(() => VideoHeight); }
+            set { videoHeight = value; NotifyOfPropertyChange(() => VideoHeight); NotifyOfPropertyChange(() => CanRecord); }
         }
-        
+
+        private bool isRecording;
+        public bool IsRecording
+        {
+            get { return isRecording; }
+            set { 
+                isRecording = value; 
+                NotifyOfPropertyChange(() => IsRecording);
+                NotifyOfPropertyChange(() => CanRecord);
+                NotifyOfPropertyChange(() => CanStop);
+            }
+        }
+
+
         public void SelectFile()
         {
             using (var dialog = new System.Windows.Forms.SaveFileDialog())
@@ -73,16 +87,37 @@ namespace ScreenCaptureWrapper
                 });
         }
 
-        public bool CanRecord { get { return true; } }
-        public void Record()
+        private Int32Rect getRect()
         {
-
+            return new Int32Rect(this.VideoX, this.VideoY, this.VideoWidth, this.VideoHeight);
         }
 
-        public bool CanStop { get { return false; } }
+        public bool CanRecord
+        { 
+            get 
+            {
+                if (IsRecording)
+                    return false;
+
+                var rect = getRect();
+                if (!(this.VideoX > 0 && this.VideoY > 0 &&
+                      this.VideoHeight > 0 && this.VideoWidth > 0))
+                    return false;
+
+                return !string.IsNullOrWhiteSpace(this.VideoPath);
+            } 
+        }
+
+        public void Record()
+        {
+            var rect = getRect();
+            this.IsRecording = true;
+        }
+
+        public bool CanStop { get { return IsRecording; } }
         public void Stop()
         {
-
+            this.IsRecording = false;
         }
     }
 }
