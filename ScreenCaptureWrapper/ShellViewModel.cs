@@ -8,6 +8,13 @@ namespace ScreenCaptureWrapper
 {
     public class ShellViewModel : Caliburn.Micro.PropertyChangedBase
     {
+        private string videoPath;
+        public string VideoPath
+        {
+            get { return videoPath; }
+            set { videoPath = value; NotifyOfPropertyChange(() => VideoPath); }
+        }
+
         private int videoX;
         public int VideoX
         {
@@ -38,6 +45,14 @@ namespace ScreenCaptureWrapper
         
         public void SelectFile()
         {
+            using (var dialog = new System.Windows.Forms.SaveFileDialog())
+            {
+                if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                {
+                    return;
+                }
+                this.VideoPath = dialog.FileName;
+            }
         }
 
         public void PickPosition()
