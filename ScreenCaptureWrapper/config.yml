@@ -1,0 +1,2 @@
+﻿ffmpeg_path: c:\opt\ffmpeg\bin\ffmpeg.exe
+ffmpeg_arguments: -rtbufsize 1500M -framerate 30 -f dshow -i video="screen-capture-recorder":audio="virtual-audio-capturer" -vf crop={Width}:{Height}:{Left}:{Top} -vcodec huffyuv -acodec pcm_s16le -ac 2 -ar 48000 -threads 1 {OutputPath}

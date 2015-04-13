@@ -56,11 +56,18 @@ namespace ScreenCaptureWrapper
             }
         }
 
-        public void OpenConfig()
+        private string getConfigPath()
         {
             var exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
             var exeDir = System.IO.Path.GetDirectoryName(exePath);
             var configPath = System.IO.Path.Combine(exeDir, ScreenCaptureConfig.ConfigFilename);
+            return configPath;
+        }
+
+        public void OpenConfig()
+        {
+            var configPath = getConfigPath();
+
             if (!System.IO.File.Exists(configPath))
             {
                 System.IO.File.WriteAllText(configPath, "");
@@ -121,7 +128,17 @@ namespace ScreenCaptureWrapper
 
         public void Record()
         {
-            var rect = getRect();
+            try
+            {
+                var rect = getRect();
+                var config = ScreenCaptureConfig.ReadConfig(getConfigPath());
+            }
+            catch (Exception ex)
+            {
+                // TODO: MVVM way
+                System.Windows.MessageBox.Show("Failed to start recording: " + ex.ToString(), "ScreenCaptureWrapper", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
             this.IsRecording = true;
         }
 
