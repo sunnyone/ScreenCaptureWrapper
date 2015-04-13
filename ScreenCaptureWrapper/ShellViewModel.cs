@@ -57,10 +57,20 @@ namespace ScreenCaptureWrapper
 
         public void PickPosition()
         {
-            this.VideoX = 100;
-            this.VideoY = 100;
-            this.VideoHeight = 100;
-            this.VideoWidth = 100;
+            SelectPositionWindow.SelectScreenPositionAsync()
+                .ContinueWith(t =>
+                {
+                    var exception = t.Exception; // HACK: ignore exception
+
+                    if (t.Status == TaskStatus.RanToCompletion)
+                    {
+                        var result = t.Result;
+                        this.VideoX = result.X;
+                        this.VideoY = result.Y;
+                        this.VideoWidth = result.Width;
+                        this.VideoHeight = result.Height;
+                    }
+                });
         }
 
         public bool CanRecord { get { return true; } }
