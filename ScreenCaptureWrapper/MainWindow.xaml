@@ -1,7 +1,9 @@
 ﻿<Window x:Class="ScreenCaptureWrapper.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="ScreenCaptureWrapper" Height="162" Width="400" ResizeMode="NoResize">
+        Title="ScreenCaptureWrapper" Height="162" Width="400" ResizeMode="NoResize"
+        Icon="Images/screen-capture-wrapper.png"
+        Background="#eee">
     <StackPanel>
         <DockPanel Margin="5">
             <Label Width="60">File:</Label>
