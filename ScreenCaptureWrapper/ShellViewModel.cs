@@ -56,6 +56,17 @@ namespace ScreenCaptureWrapper
             }
         }
 
+        public void OpenConfig()
+        {
+            var exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var exeDir = System.IO.Path.GetDirectoryName(exePath);
+            var configPath = System.IO.Path.Combine(exeDir, ScreenCaptureConfig.ConfigFilename);
+            if (!System.IO.File.Exists(configPath))
+            {
+                System.IO.File.WriteAllText(configPath, "");
+            }
+            System.Diagnostics.Process.Start(configPath);
+        }
 
         public void SelectFile()
         {
