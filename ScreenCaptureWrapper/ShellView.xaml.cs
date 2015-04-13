@@ -20,5 +20,10 @@ namespace ScreenCaptureWrapper
         {
             InitializeComponent();
         }
+
+        private void Log_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            this.LogText.ScrollToEnd();
+        }
     }
 }

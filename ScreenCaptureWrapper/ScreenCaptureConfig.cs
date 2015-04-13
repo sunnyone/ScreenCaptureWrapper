@@ -16,7 +16,7 @@ namespace ScreenCaptureWrapper
         public string FFmpegPath { get; set; }
 
         [YamlAlias("ffmpeg_arguments")]
-        public string FfmpegArguments { get; set; }
+        public string FFmpegArguments { get; set; }
 
         public static ScreenCaptureConfig ReadConfig(string path) {
             var deserializer = new YamlDotNet.Serialization.Deserializer(namingConvention: new CamelCaseNamingConvention());

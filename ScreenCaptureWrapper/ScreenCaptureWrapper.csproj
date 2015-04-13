@@ -43,6 +43,9 @@
     <Reference Include="Caliburn.Micro.Platform">
       <HintPath>..\packages\Caliburn.Micro.2.0.2\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
+    <Reference Include="Cottle">
+      <HintPath>..\packages\Cottle.1.3.1.2\lib\net35\Cottle.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -84,6 +87,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="Recorder.cs" />
     <Compile Include="ScreenCaptureConfig.cs" />
     <Compile Include="SelectPositionWindow.xaml.cs">
       <DependentUpon>SelectPositionWindow.xaml</DependentUpon>

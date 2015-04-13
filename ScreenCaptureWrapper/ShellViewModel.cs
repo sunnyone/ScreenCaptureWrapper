@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -54,6 +55,19 @@ namespace ScreenCaptureWrapper
                 NotifyOfPropertyChange(() => CanRecord);
                 NotifyOfPropertyChange(() => CanStop);
             }
+        }
+
+        private string logText = "";
+        public string LogText
+        {
+            get { return logText; }
+            set { logText = value; NotifyOfPropertyChange(() => LogText); }
+        }
+
+        // TODO: may be slow
+        private void addLog(string line)
+        {
+            this.LogText = this.LogText + line + "\n";
         }
 
         private string getConfigPath()
@@ -126,26 +140,39 @@ namespace ScreenCaptureWrapper
             } 
         }
 
+        private CancellationTokenSource cancellationTokenSource;
         public void Record()
         {
-            try
+            var rect = getRect();
+            var recordParam = new RecordParam()
             {
-                var rect = getRect();
-                var config = ScreenCaptureConfig.ReadConfig(getConfigPath());
-            }
-            catch (Exception ex)
-            {
-                // TODO: MVVM way
-                System.Windows.MessageBox.Show("Failed to start recording: " + ex.ToString(), "ScreenCaptureWrapper", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+                Left = rect.X,
+                Top = rect.Y,
+                Width = rect.Width,
+                Height = rect.Height,
+                OutputPath = this.VideoPath
+            };
 
+            cancellationTokenSource = new CancellationTokenSource();
+            Recorder.Record(getConfigPath(), recordParam, cancellationTokenSource.Token, new Progress<string>(s => this.addLog(s)))
+                .ContinueWith(t =>
+                {
+                    if (t.IsFaulted)
+                    {
+                        this.addLog("Exception occured when recording: " + t.Exception.ToString());
+                    }
+                    
+                    this.IsRecording = false;
+                });
+                
             this.IsRecording = true;
         }
 
         public bool CanStop { get { return IsRecording; } }
         public void Stop()
         {
-            this.IsRecording = false;
+            if (IsRecording)
+                cancellationTokenSource.Cancel();
         }
     }
 }
