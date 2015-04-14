@@ -37,12 +37,6 @@ namespace ScreenCaptureWrapper
                     throw new ArgumentException("OutputPath contains '\"'");
                 }
 
-                if (System.IO.File.Exists(recordParam.OutputPath))
-                {
-                    logProgress.Report("Deleting the file.");
-                    System.IO.File.Delete(recordParam.OutputPath);
-                }
-
                 var argumentTemplate = ffmpegArguments;
 
                 var simpleDocument = new Cottle.Documents.SimpleDocument(argumentTemplate);
