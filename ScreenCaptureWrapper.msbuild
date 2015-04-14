@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Clean;Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\.build</MSBuildCommunityTasksPath>
+	<OutputDir>$(MSBuildProjectDirectory)\build</OutputDir>
+	<ScreenCaptureWrapperVersion>0.0.1</ScreenCaptureWrapperVersion>
+  </PropertyGroup>
+  
+  <ItemGroup>
+     <DocFiles Include="LICENSE.txt" />
+     <DocFiles Include="README.md" />
+     <DocFiles Include="NEWS.txt" />
+  </ItemGroup>
+
+  <Import Project="$(MSBuildProjectDirectory)\.build\MSBuild.Community.Tasks.Targets"/>
+  
+  <Target Name="Clean">
+    <RemoveDir Directories="$(OutputDir)" />
+  </Target>
+  
+  <Target Name="Version">
+    <Time>
+      <Output TaskParameter="Year" PropertyName="Year" />
+    </Time>
+
+    <Message Text="Version: $(ScreenCaptureWrapperVersion)"/>
+
+    <Attrib Files="$(MSBuildProjectDirectory)\GlobalAssemblyInfo.cs" ReadOnly="False" />
+
+    <AssemblyInfo CodeLanguage="CS"
+                  OutputFile="$(MSBuildProjectDirectory)\GlobalAssemblyInfo.cs"
+                  GenerateClass="true"
+				  AssemblyCompany="http://sunnyone.org"
+				  AssemblyProduct="ScreenCaptureWrapper"
+                  AssemblyCopyright="Copyright © sunnyone 2015-$(Year)"
+                  AssemblyVersion="$(ScreenCaptureWrapperVersion).0"
+                  AssemblyFileVersion="$(ScreenCaptureWrapperVersion).0"
+                  AssemblyInformationalVersion="$(ScreenCaptureWrapperVersion).0" />
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="Clean">
+    <MSBuild Targets="Build" Projects="$(MSBuildProjectDirectory)\ScreenCaptureWrapper\ScreenCaptureWrapper.csproj"
+             Properties="Configuration=Release;OutputPath=$(OutputDir)\ScreenCaptureWrapper" />
+
+	<ItemGroup>
+		<PdbFiles Include="$(OutputDir)\ScreenCaptureWrapper\*.pdb" />
+	</ItemGroup>
+	<Delete Files="@(PdbFiles)" />
+	
+	<Copy SourceFiles="@(DocFiles)" DestinationFolder="$(OutputDir)\ScreenCaptureWrapper" />
+  </Target>
+  
+  <Target Name="Package" DependsOnTargets="Clean;Archive" />
+  
+  <Target Name="Archive" DependsOnTargets="Build">
+    <ItemGroup>
+      <Files Include="$(OutputDir)\ScreenCaptureWrapper\**\*" />
+	</ItemGroup>
+	
+	<Zip Files="@(Files)"
+	     WorkingDirectory="$(OutputDir)"
+	     ZipFileName="$(OutputDir)\ScreenCaptureWrapper-$(ScreenCaptureWrapperVersion).zip" />
+  </Target>
+</Project>
+
