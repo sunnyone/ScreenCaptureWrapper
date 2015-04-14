@@ -84,6 +84,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="Preset.cs" />
     <Compile Include="Recorder.cs" />
     <Compile Include="ScreenCaptureConfig.cs" />
     <Compile Include="SelectPositionWindow.xaml.cs">

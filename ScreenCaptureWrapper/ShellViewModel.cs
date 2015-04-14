@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -10,6 +12,21 @@ namespace ScreenCaptureWrapper
 {
     public class ShellViewModel : Caliburn.Micro.PropertyChangedBase
     {
+        private string ffmpegPath;
+        public string FFmpegPath
+        {
+            get { return ffmpegPath; }
+            set { ffmpegPath = value; NotifyOfPropertyChange(() => FFmpegPath); NotifyOfPropertyChange(() => CanRecord); }
+        }
+
+        public BindableCollection<Preset> PresetCollection { get; private set; }
+        private Preset selectedPreset;
+        public Preset SelectedPreset
+        {
+            get { return selectedPreset; }
+            set { selectedPreset = value; NotifyOfPropertyChange(() => SelectedPreset); NotifyOfPropertyChange(() => CanRecord); }
+        }
+
         private string videoPath;
         public string VideoPath
         {
@@ -64,6 +81,26 @@ namespace ScreenCaptureWrapper
             set { logText = value; NotifyOfPropertyChange(() => LogText); }
         }
 
+        public ShellViewModel()
+        {
+            this.PresetCollection = new BindableCollection<Preset>();
+            refreshConfig();
+            loadSettings();
+        }
+
+        private void loadSettings()
+        {
+            this.FFmpegPath = Properties.Settings.Default.FFmpegPath;
+            selectPresetByName(Properties.Settings.Default.PresetName);
+        }
+
+        private void saveSettings()
+        {
+            Properties.Settings.Default.FFmpegPath = this.FFmpegPath;
+            Properties.Settings.Default.PresetName = this.SelectedPreset != null ? this.SelectedPreset.Name : null;
+            Properties.Settings.Default.Save();
+        }
+
         // TODO: may be slow
         private void addLog(string line)
         {
@@ -78,6 +115,34 @@ namespace ScreenCaptureWrapper
             return configPath;
         }
 
+        private void refreshConfig()
+        {
+            var presetName = this.SelectedPreset != null ? this.SelectedPreset.Name : null;
+
+            this.PresetCollection.Clear();
+            try
+            {
+                var config = ScreenCaptureConfig.ReadConfig(getConfigPath());
+                foreach (var preset in config.Presets)
+                {
+                    this.PresetCollection.Add(preset);
+                }
+            }
+            catch (Exception ex)
+            {
+                addLog("Failed to load the config file: " + ex.ToString());
+            }
+
+            if (presetName != null)
+                selectPresetByName(presetName);
+        }
+
+        private void selectPresetByName(string presetName)
+        {
+            var preset = this.PresetCollection.FirstOrDefault(x => x.Name == presetName);
+            this.SelectedPreset = preset;
+        }
+
         public void OpenConfig()
         {
             var configPath = getConfigPath();
@@ -86,7 +151,24 @@ namespace ScreenCaptureWrapper
             {
                 System.IO.File.WriteAllText(configPath, "");
             }
-            System.Diagnostics.Process.Start(configPath);
+            var proc = System.Diagnostics.Process.Start(configPath);
+            proc.Exited += (sender, e) =>
+            {
+                refreshConfig();
+            };
+            proc.EnableRaisingEvents = true;
+        }
+
+        public void SelectFFmpegPath()
+        {
+            using (var dialog = new System.Windows.Forms.OpenFileDialog())
+            {
+                if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                {
+                    return;
+                }
+                this.FFmpegPath = dialog.FileName;
+            }
         }
 
         public void SelectFile()
@@ -131,6 +213,12 @@ namespace ScreenCaptureWrapper
                 if (IsRecording)
                     return false;
 
+                if (string.IsNullOrWhiteSpace(FFmpegPath))
+                    return false;
+
+                if (this.SelectedPreset == null)
+                    return false;
+
                 var rect = getRect();
                 if (!(this.VideoX > 0 && this.VideoY > 0 &&
                       this.VideoHeight > 0 && this.VideoWidth > 0))
@@ -154,7 +242,7 @@ namespace ScreenCaptureWrapper
             };
 
             cancellationTokenSource = new CancellationTokenSource();
-            Recorder.Record(getConfigPath(), recordParam, cancellationTokenSource.Token, new Progress<string>(s => this.addLog(s)))
+            Recorder.Record(this.FFmpegPath, this.SelectedPreset.Arguments, recordParam, cancellationTokenSource.Token, new Progress<string>(s => this.addLog(s)))
                 .ContinueWith(t =>
                 {
                     if (t.IsFaulted)
@@ -173,6 +261,11 @@ namespace ScreenCaptureWrapper
         {
             if (IsRecording)
                 cancellationTokenSource.Cancel();
+        }
+
+        public void OnClosed()
+        {
+            saveSettings();
         }
     }
 }

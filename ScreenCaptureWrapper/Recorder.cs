@@ -27,7 +27,7 @@ namespace ScreenCaptureWrapper
 
     public class Recorder
     {
-        public static Task Record(string configPath, RecordParam recordParam, CancellationToken cancellationToken, IProgress<string> logProgress)
+        public static Task Record(string ffmpegPath, string ffmpegArguments, RecordParam recordParam, CancellationToken cancellationToken, IProgress<string> logProgress)
         {
             return Task.Run(() =>
             {
@@ -43,20 +43,19 @@ namespace ScreenCaptureWrapper
                     System.IO.File.Delete(recordParam.OutputPath);
                 }
 
-                var config = ScreenCaptureConfig.ReadConfig(configPath);
-                var argumentTemplate = config.FFmpegArguments;
+                var argumentTemplate = ffmpegArguments;
 
                 var simpleDocument = new Cottle.Documents.SimpleDocument(argumentTemplate);
                 var store = new Cottle.Stores.BuiltinStore();
                 recordParam.SetToCottleStore(store);
                 var arguments = simpleDocument.Render(store);
 
-                string startLine = string.Format("Start: {0} {1}", config.FFmpegPath, arguments);
+                string startLine = string.Format("Start: {0} {1}", ffmpegPath, arguments);
                 logProgress.Report(startLine);
 
                 var psi = new System.Diagnostics.ProcessStartInfo()
                 {
-                    FileName = config.FFmpegPath,
+                    FileName = ffmpegPath,
                     Arguments = arguments,
                     CreateNoWindow = true,
                     UseShellExecute = false,

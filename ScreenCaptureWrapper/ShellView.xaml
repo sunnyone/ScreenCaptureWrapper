@@ -1,23 +1,38 @@
 ﻿<Window x:Class="ScreenCaptureWrapper.ShellView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="ScreenCaptureWrapper" Height="400" Width="400" Icon="Images/screen-capture-wrapper.png"
-        Background="#eee">
+        xmlns:cal="http://www.caliburnproject.org"
+        Title="ScreenCaptureWrapper" Height="420" Width="420" Icon="Images/screen-capture-wrapper.png"
+        Background="#eee"
+        cal:Message.Attach="[Event Closed] = [Action OnClosed()]">
     <DockPanel Margin="10">
         <StackPanel DockPanel.Dock="Top">
             <DockPanel Margin="5">
-                <Label Width="60">Config:</Label>
-                <Button Width="140" x:Name="OpenConfig" HorizontalAlignment="Left">Open config.yml</Button>
+                <Label Width="80">FFmpeg:</Label>
+                <Button Width="80" DockPanel.Dock="Right" x:Name="SelectFFmpegPath">Select</Button>
+                <TextBox x:Name="FFmpegPath"></TextBox>
             </DockPanel>
-        
+
             <DockPanel Margin="5">
-                <Label Width="60">File:</Label>
+                <Label Width="80">Preset:</Label>
+                <Button Width="80" x:Name="OpenConfig" DockPanel.Dock="Right" HorizontalAlignment="Left">Edit</Button>
+                <ComboBox ItemsSource="{Binding PresetCollection}" SelectedItem="{Binding SelectedPreset}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </DockPanel>
+            
+            <DockPanel Margin="5">
+                <Label Width="80">Output:</Label>
                 <Button Width="80" DockPanel.Dock="Right" x:Name="SelectFile">Select</Button>
                 <TextBox x:Name="VideoPath"></TextBox>
             </DockPanel>
 
             <DockPanel Margin="5">
-                <Label Width="60">Position:</Label>
+                <Label Width="80">Position:</Label>
                 <TextBox x:Name="VideoWidth" Width="40"></TextBox>
                 <Label>x</Label>
                 <TextBox x:Name="VideoHeight" Width="40"></TextBox>
