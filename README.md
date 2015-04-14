@@ -5,7 +5,7 @@
 
 The GUI frontend of ffmpeg that focused to capture videos of the screen (screencast).
 
-![Screenshot](https://raw.github.com/sunnyone/ScreenCaptureRecorder/master/Screenshot.png)
+![Screenshot](https://raw.github.com/sunnyone/ScreenCaptureWrapper/master/Screenshot.png)
 
 # Requirements
 
