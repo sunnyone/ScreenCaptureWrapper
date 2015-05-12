@@ -1,5 +1,11 @@
 ﻿presets:
   -
+    name: gdigrab Webm
+    arguments: -y -rtbufsize 1500M -f gdigrab -show_region 1 -framerate 30 -draw_mouse 1 -offset_x {left} -offset_y {top} -video_size {width}x{height} -i desktop -vcodec libvpx -crf 5 "{output_path}"
+  -
+    name: screen-capture-recorder Webm
+    arguments: -y -rtbufsize 1500M -framerate 30 -f dshow -i video="screen-capture-recorder":audio="virtual-audio-capturer" -vf crop={width}:{height}:{left}:{top} -vcodec libvpx -crf 5 -acodec libvorbis -ac 2 -ar 48000 -threads 1 "{output_path}"
+  -
     name: gdigrab Huffyuv
     arguments: -y -rtbufsize 1500M -f gdigrab -show_region 1 -framerate 30 -draw_mouse 1 -offset_x {left} -offset_y {top} -video_size {width}x{height} -i desktop -vcodec huffyuv "{output_path}"
   -
