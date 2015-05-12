@@ -185,7 +185,7 @@ namespace ScreenCaptureWrapper
 
         public void PickPosition()
         {
-            SelectPositionWindow.SelectScreenPositionAsync()
+            SelectScreenPositionUtil.SelectScreenPositionAsync()
                 .ContinueWith(t =>
                 {
                     var exception = t.Exception; // HACK: ignore exception
@@ -193,10 +193,10 @@ namespace ScreenCaptureWrapper
                     if (t.Status == TaskStatus.RanToCompletion)
                     {
                         var result = t.Result;
-                        this.VideoX = result.X;
-                        this.VideoY = result.Y;
-                        this.VideoWidth = result.Width;
-                        this.VideoHeight = result.Height;
+                        this.VideoX = (int) result.X;
+                        this.VideoY = (int) result.Y;
+                        this.VideoWidth = (int) result.Width;
+                        this.VideoHeight = (int) result.Height;
                     }
                 });
         }
