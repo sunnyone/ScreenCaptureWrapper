@@ -1,6 +1,12 @@
 NEWS
 =====
 
-2012-01-08  Version 0.0.1
+2015-05-13  Version 0.0.2
+---------------------------
+* Previewing the size and aspect ratio when picking.
+* Added webm to the default template.
+
+
+2015-04-15  Version 0.0.1
 ---------------------------
 * Initial release.

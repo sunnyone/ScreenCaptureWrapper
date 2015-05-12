@@ -3,7 +3,7 @@
   <PropertyGroup>
 	<MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\.build</MSBuildCommunityTasksPath>
 	<OutputDir>$(MSBuildProjectDirectory)\build</OutputDir>
-	<ScreenCaptureWrapperVersion>0.0.1</ScreenCaptureWrapperVersion>
+	<ScreenCaptureWrapperVersion>0.0.2</ScreenCaptureWrapperVersion>
   </PropertyGroup>
   
   <ItemGroup>

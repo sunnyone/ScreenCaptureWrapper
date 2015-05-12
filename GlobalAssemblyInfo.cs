@@ -11,9 +11,9 @@
 [assembly: System.Reflection.AssemblyCompany("http://sunnyone.org")]
 [assembly: System.Reflection.AssemblyProduct("ScreenCaptureWrapper")]
 [assembly: System.Reflection.AssemblyCopyright("Copyright © sunnyone 2015-2015")]
-[assembly: System.Reflection.AssemblyVersion("0.0.1.0")]
-[assembly: System.Reflection.AssemblyFileVersion("0.0.1.0")]
-[assembly: System.Reflection.AssemblyInformationalVersion("0.0.1.0")]
+[assembly: System.Reflection.AssemblyVersion("0.0.2.0")]
+[assembly: System.Reflection.AssemblyFileVersion("0.0.2.0")]
+[assembly: System.Reflection.AssemblyInformationalVersion("0.0.2.0")]
 
 
 
@@ -25,11 +25,11 @@ internal sealed partial class ThisAssembly {
     
     internal const string AssemblyCopyright = "Copyright © sunnyone 2015-2015";
     
-    internal const string AssemblyVersion = "0.0.1.0";
+    internal const string AssemblyVersion = "0.0.2.0";
     
-    internal const string AssemblyFileVersion = "0.0.1.0";
+    internal const string AssemblyFileVersion = "0.0.2.0";
     
-    internal const string AssemblyInformationalVersion = "0.0.1.0";
+    internal const string AssemblyInformationalVersion = "0.0.2.0";
     
     private ThisAssembly() {
     }
